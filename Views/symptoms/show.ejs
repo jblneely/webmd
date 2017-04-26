@@ -1,0 +1,14 @@
+<h1><%= symptom.name %> - <%symptom.severity %> out of 10!</h1>
+<h2>affectedSymptoms <% symptom.affectedSymptoms %></h2>
+<h3>
+	<% symptom.description %>
+</h3>
+<h2>Here's the deal, if you got these you probably have a disease.</h2>
+<ul>
+<% symptoms.disease.forEach(function(d) { %>
+<li class="list-group-item-danger">
+<% d.name %>
+</li>
+
+<% }); %>
+</ul>
