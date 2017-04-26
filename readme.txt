@@ -10,10 +10,12 @@
     });
 
 2.  Created views/symptoms/show.ejs
-	The symptoms are appear in the postico, but are not appearing on the show.ejs page.  I styled the show page modeling it on the diseases/show.ejs.
+	The symptoms are appear in the postico, but are not appearing on the show.ejs page.  I styled the show page modeling it on the diseases/show.ejs and my class notes (see attached file classNotes).
 
-3.  I added two additional images on 	the diseases page.
+3.  I added two additional images on the diseases page.
 
-4.  I added a bootstrap thumbnail and 		well on the home.ejs page.
+4.  I added a bootstrap thumbnail and well (light grey box with rounded edges div) on the home.ejs page.
+
+-- I was curious about bootstrap for backgound image, but didn't see it on the cheatsheet or on google search.
 
 

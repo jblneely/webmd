@@ -1,0 +1,179 @@
+
+
+
+M:M    — Relational Database —  (“Brandy” teaching)
+“join table”
+three tables:  diseases, symptoms, diseases_symptoms.
+
+diseases:
+id: integer
+name: string
+description: text
+terminal: boolean
+created at: date time
+updated at: date time
+severity: integer
+transmission: string
+
+symptoms:
+id:
+name:
+description: text:
+affected system: string
+severity: integer
+created at:
+updated at:
+
+diseases_symptoms:  join table:
+id:
+diseases id:
+symptom Id:
+created at:
+updated at:
+
+plan out routes::::
+
+path 			method			what’s this do?
+/					GET				welcome/logo/links
+/diseases			GET				list diseases
+/symptoms			GET				list symptoms
+/diseases/:id/1		GET				page for specific diseases (a “show page”)
+/symptoms/:id/1		GET				shoe page for symptoms
+/symptoms			POST			way to post new symptom & associate with disease
+/symptoms			GET				form to add symptoms.
+/diseases			POST			way to post new symptom & associate with diseases
+/diseases			Get				form to add symptoms.
+
+_________CODING:
+
+1.  npm init -y (creates package .jason file)
+2.  nom install —save express, sequelize, path, ejs, pg, pg-hstore, express-ejs-layouts, body-parser
+3.  createdb webmd
+4. sequelize init (creates migrations folders: migrations, models, seeders(to seed dev db onto production).
+5. subl . =change config/config.jason file
+    1. remove username and password
+    2. change db name (to what your named your db above:  here ‘webmd’)
+    3. change my sql (to postgres)
+6. create your models (using sequelize in terminal)
+    1. sequelize model:create --name disease(lowercase and singular) --attributes name:string,description:text,isTerminal:boolean,severity:integer,transmission:string (you can write is without spaces between the commas, or put the whole thing in double quotes and use spaces.)
+    2. sequelize model:create --name disease --attributes name:string,description:text,isTerminal:boolean,severity:integer,transmission:string
+    3. sequelize model:create --name symptom --attributes name:string,description:text,affectedSystems:string,severity:integer
+    4. sequelize model:create --name disease_symptom --attributes diseaseId:integer,symptomId:integer
+    5. this creates modest and migration folders in sublime.  Migrations fun the up function to create, and the model for the table (here at models/disease.js)
+7. update the associations in sublime:
+    1. models.disease.belongsToMany(models.symptoms, {through: models.disease_symptom}); ((in models/disease.js)
+    2.  models.symptom.belongsToMany(models.disease, {through: models.disease_symptom}); ((in models/symptom.js)
+    3. the table names are singular because you are still in model.
+8. sequelize db:migrate (run migrations in terminal — 
+9. check out tables in terminal
+    1. psql
+    2. \dt (data tables)
+    3. \q (to leave psql)
+10. touch index.js (in terminal to create the index file where package JSON will look to start)
+11. start declaring express statements in index.js in sublime:  start with commented out sections:
+    1. //includes & Global Variables
+    2. //Set and Use Statement
+    3. //Define Routes
+    4. //Listen (tell it what port to listen on)
+12. fill in the basics….then.. and do a test [res.send(“Hello world”)] under the first define route [app.route("/", function(req, res) {].  see index.js
+13. run “nodemon” in terminal. and check the browser at port “localhost3000” to see if “hello world” appears.
+14. in sublime:  create a folder named “views” then a “layout.ejs” file in the views folder.  fill in the EJS file with html boilerplate. set the title.
+    1. add in some bootstrap under the title (bootstrap is just css)
+    2. <link rel=“stylesheet” href=“https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css” integrity=“sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7” crossorigin=“anonymous”>
+    3. in views/layout.ejs.  create a <div> with class =“container”.   in the div include <%- body %> on a separate line.  here use (-) rather than the usual (=) to render html. <<nb. dont comment out code in ejs>> create an <hr> below the body.
+    4. create some <a> links> bootstrap allows you to create buttons with class=“btn” use lg, sm to change size, color, etc.  look it up. 
+15. create another tab in views/home.ejs (to create your web page home)
+16. check out the H1 with bootstrap commands
+17. change res.send on index.js to   res.render("home"); from “hello world.”)
+18. put an image on your home page:  create a static folder and create an “images” folder under that to hold your images, or just hotlink on your home.js page.
+19. div out your home.js page and add some text etc.
+20. create a controllers foldergit p and diseases.js file in it.  
+21.  put in the heading links for routes….express, router
+22. create a file in views to hold diseases pages, and put a file called all.ejs in it.  diseases/all.ejs
+23. then res.render it in your controllers/diseases.js file and include:
+    1. module.exports = router; at the end of the page.
+24. tell index.js about the router under the routes //controllers:
+    1. app.use("/diseases", require("./controllers/diseases"));
+25. create a new file in views/diseases called “add.ejs” and put a form in it with method=“post” and action=“/diseases”
+26. bootstrap style for form: class=“form-group:
+    1. create label NAME
+    2. create input include name=“name” this is how backend will access. like this:
+    3. <input type="text" name="name" placeholder="Type disease name here" class="form-control">
+    4. create a submit button by typing input and filling in type=“submit”
+27. add a shortcut to page by adding a button on layout.ejs.
+28. diseases.js add a router.post(“/“, function(req, res) {
+29. create controllers/symptoms.js = set up with var, app, get. create a stub:
+    1.   router.get("/", function(req, res) {
+    2.     res.send("All symptoms page here");
+    3. });
+30. link it in index.js in the //controllers section. 
+    1. app.use("/symptoms", require("./controllers/symptoms"));
+31. create folder views/symptoms and file symptoms/all.ejs
+    1. make divs, h1, h2, 
+32. then go back to controllers/symptoms.js and change the stub for “symptoms/all.”
+33. add.js in views/symptoms/add.js.  make a form. with a button at the bottom.  add a value to change the text of the button.
+34. in layout.ejs add  <a href="/symptoms/add" class="btn btn-info">Enter Symptom</a> 
+35. forms working - lets make them do something
+36. in controllers/symptoms.js - put in a post!!! with a stub.
+    1. router.post("/", function(req, res) {
+    2. 	console.log(req.body);
+    3. 	res.send("symptoms post is working");
+    4. })
+    5. check that symptoms page is working by going to localhost3000/symptoms/add and posting, hit submit - then should say “symptoms post is working”
+    6. keep the 
+37. now we want to get the post to write to the db.  
+38. on controllers/symptoms.js add:
+    1. var db = require("../models");
+39. then go down to the post you just made and make a create:
+    1. then replace the res send line with:
+    2.  db.symptom.create(req.body) … or
+    3. db.symptom.create ({
+        1. {name: ‘abc’ …
+    4. add a promise to the same line…).then
+    5. now redirect
+    6. and add a catch
+    7. check the page, enter into form, then check the form psql \db. to see if the data is in the table.
+40. create a find all.
+41. now pass the  info to the views page views/symptoms/all.ejs.  add <% on every line:
+    1. <% symptoms.forEach(function(s) { %>
+    2. 		<div>
+    3. 		<a href="/symptoms/<%=s.id%>">
+    4. <% s.name %>
+    5. 		</a>
+42. Set ups controllers/diseases.js:
+43. var db = reuqire ("../models"); on top, and add the post:
+    1. router.post("/", function(req, res) {
+    2.     console.log("req.body");
+    3.     db.diseases.create({
+    4.         name: req.body.name,
+    5.         description: req.body.description,
+    6.         severity: req.body.severity,
+    7.         transmission: req.body.transmission
+    8.     });
+44. then go to views/diseease and add the additional sections for symptoms and transmissions and an input submit btn.
+45. back to controllers/disese.js
+    1. add .then and…:
+        1. });.then(function(newDisease) {
+        2.     	var symptoms = [];
+        3.     	if(req.body.symptoms) {
+        4.     		symptoms = req.body.symptoms.split(",");
+        5.     	}
+        6. this will put the symptoms into an array and split them with a comma.
+    2.  if (req.body.symptoms) {
+    3.             symptoms = req.body.symptoms.split(",");
+    4.         }
+    5.         if (symptoms.length > 0) {
+    6. 
+    7.         } else {
+    8.             res.redirect("/diseases");
+    9.         }
+    10.     }).catch(function(error) {
+    11.         res.send(error);
+    12.     });
+    13. makes sure there is something in the input
+46. npm install —save async
+    1. then require it at the top (second line from top)
+    2. then run a for loop… “forEachSeries”…
+    3. ……………
+47. create another get route in the controller/ diseases.js
+48. create a /views/diseases/show.ejs file
